@@ -10,12 +10,20 @@ CHANGE ï»¿track track VARCHAR(500);
 ALTER TABLE song
 CHANGE ï»¿track track VARCHAR(500);
 
-
+# to understand the distribution of songs by year, can help us keep in mind how different
+# eras/social-cultural factors of each year may influence our findings 
+# analysis: majority of our data is from 2021 - 2023 
 select count(distinct track) as 'number of songs', released_year
 from song
 group by released_year; 
 
 
+#to see if there is a relationship between number of artists (indicating collaboration)
+# and # of of playlists/rankings
+# also to see if there are differences between spotify and apple ranking 
+# analysis: spotify rankings and playlists are higher than apple 
+# analysis: interestingly, songs with less artists were addded to more playlists however, in general 
+# analysis: were ranked lower on spotify 
 select artist_count, sum(in_spotify_playlists) as '# of spotify playlists', 
 sum(in_spotify_charts) as 'spotify ranking', sum(in_apple_charts) as 
 'apple ranking', sum(in_apple_playlists) as '# of apple playlists'
@@ -26,6 +34,10 @@ group by artist_count
 order by artist_count ASC; 
 
 
+
+# to see if there's a month where a song was released and the total number of streams was higher 
+# than the average number of streams that month 
+# analysis: May, January, March, Novemeber 
 SELECT released_month AS 'month', SUM(streams) AS 'total number of streams' 
 FROM ranking r
 JOIN song s ON r.track = s.track
@@ -42,6 +54,8 @@ HAVING SUM(streams) > (
 ORDER BY SUM(streams) DESC;
 
 
+# to see if there is a relationship between the month a song was released and the total number of streams
+# analysis: top 3 highest streaming months were May, January, and March
 select artist_name, count(a.track) as 'total number of songs',
 sum(streams) as 'total number of streams' 
 from ranking r
@@ -51,7 +65,9 @@ group by artist_name
 order by sum(streams) DESC;
 
 
-
+# to compare top and bottom 5 stream counts
+# to see if speechiness, liveness, dancebility, valence, and energy within a song makes a difference 
+# analysis: top 5 and bottom 5 have similar values except for total valence which is slightly lower for top 5 streams 
 select streams, sum(speechiness) as 'total speechiness' , 
 sum(liveness) as 'total liveness', sum(danceability) as 
 'total danceability', sum(valence) as 'total valence', 
@@ -61,6 +77,17 @@ join ranking r
 on m.track = r.track
 group by streams
 order by streams DESC
+limit 5; 
+
+select streams, sum(speechiness) as 'total speechiness' , 
+sum(liveness) as 'total liveness', sum(danceability) as 
+'total danceability', sum(valence) as 'total valence', 
+sum(energy) as 'total energy'
+from metrics m 
+join ranking r
+on m.track = r.track
+group by streams
+order by streams ASC
 limit 5; 
 
 
