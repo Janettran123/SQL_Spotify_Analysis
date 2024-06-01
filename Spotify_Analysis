@@ -1,0 +1,67 @@
+ALTER TABLE artist
+CHANGE ï»¿id id VARCHAR(50);
+
+ALTER TABLE ranking
+CHANGE ï»¿track track VARCHAR(500);
+
+ALTER TABLE metrics
+CHANGE ï»¿track track VARCHAR(500);
+
+ALTER TABLE song
+CHANGE ï»¿track track VARCHAR(500);
+
+
+select count(distinct track) as 'number of songs', released_year
+from song
+group by released_year; 
+
+
+select artist_count, sum(in_spotify_playlists) as '# of spotify playlists', 
+sum(in_spotify_charts) as 'spotify ranking', sum(in_apple_charts) as 
+'apple ranking', sum(in_apple_playlists) as '# of apple playlists'
+from ranking r
+inner join artist a
+on r.track = a.track
+group by artist_count
+order by artist_count ASC; 
+
+
+SELECT released_month AS 'month', SUM(streams) AS 'total number of streams' 
+FROM ranking r
+JOIN song s ON r.track = s.track
+GROUP BY released_month 
+HAVING SUM(streams) > (
+    SELECT AVG(monthly_streams)
+    FROM (
+        SELECT released_month, SUM(streams) AS monthly_streams
+        FROM ranking
+        JOIN song ON ranking.track = song.track
+        GROUP BY released_month
+    ) AS avg_streams
+)
+ORDER BY SUM(streams) DESC;
+
+
+select artist_name, count(a.track) as 'total number of songs',
+sum(streams) as 'total number of streams' 
+from ranking r
+join artist a
+on r.track = a.track
+group by artist_name
+order by sum(streams) DESC;
+
+
+
+select streams, sum(speechiness) as 'total speechiness' , 
+sum(liveness) as 'total liveness', sum(danceability) as 
+'total danceability', sum(valence) as 'total valence', 
+sum(energy) as 'total energy'
+from metrics m 
+join ranking r
+on m.track = r.track
+group by streams
+order by streams DESC
+limit 5; 
+
+
+
