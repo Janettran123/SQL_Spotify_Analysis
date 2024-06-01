@@ -37,7 +37,7 @@ order by artist_count ASC;
 
 # to see if there's a month where a song was released and the total number of streams was higher 
 # than the average number of streams that month 
-# analysis: May, January, March, Novemeber 
+# analysis: May, January, March, November 
 SELECT released_month AS 'month', SUM(streams) AS 'total number of streams' 
 FROM ranking r
 JOIN song s ON r.track = s.track
@@ -56,6 +56,17 @@ ORDER BY SUM(streams) DESC;
 
 # to see if there is a relationship between the month a song was released and the total number of streams
 # analysis: top 3 highest streaming months were May, January, and March
+select released_month as 'month', sum(streams) as 'total number of streams' 
+from ranking r 
+join song s 
+on r.track = s.track
+group by released_month
+order by sum(streams) DESC; 
+
+
+
+# to rank artists based on their total number of streams 
+# analysis: top 3 most streamed artists also had a higher number of released songs 
 select artist_name, count(a.track) as 'total number of songs',
 sum(streams) as 'total number of streams' 
 from ranking r
