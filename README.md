@@ -2,7 +2,7 @@
 
 # analysis on various spotify customer activity to generate business insights to increase platform usage 
 
-# after analysis, several business insights and recommendations are: 
+# after analysis, several business insights are: 
   Focus on 1. Number of Spotify playlists and streams 
            2. Generate activity! --> Retain membership! -->  Keep subscription! -->  $$$!
 
